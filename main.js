@@ -51,7 +51,6 @@ function handleDeleteCourse(id) {
             var courseItem = document.querySelector('.course-item-' + id);
             if(courseItem) {
                 courseItem.remove();
-                
             }
         })
 }
@@ -88,7 +87,9 @@ function handlePatchCourse(id) {
     updateArea.innerHTML = `<button id="update-btn">Lưu</button>`
     var updateBtn = document.getElementById('update-btn')
 
+
     updateBtn.onclick = function() {
+        updateArea.innerHTML = '';
         var newName = name.value;
         var newDescription = description.value;
 
@@ -97,9 +98,9 @@ function handlePatchCourse(id) {
             description: newDescription
         };
         updateCourses(id, formData, function() {
-            getCourses(renderCourses);
-            updateArea.innerHTML = `<button id="create">Create</button>`;
-            handleCreateForm()
+            start();
+            name.value = '';
+            description.value = '';
         })
         
     }
@@ -126,20 +127,22 @@ function renderCourses(courses) {
 
 function handleCreateForm() {
     var createBtn = document.querySelector('#create');
-    console.log(createBtn)
-
     createBtn.onclick = function() {
-        var name = document.querySelector('input[name="name"]').value;
-        var description = document.querySelector('input[name="description"]').value;
-        
-        var formData = {
-            name: name,
-            description: description
-        };
-
-        createCourses(formData, function() {
-            getCourses(renderCourses);
-        });
+        var name = document.querySelector('input[name="name"]');
+        var description = document.querySelector('input[name="description"]');
+        if (name.value === '' || description.value === '') {
+            alert('Hãy nhập đầy đủ thông tin khóa học');
+        } else {
+            var formData = {
+                name: name.value,
+                description: description.value
+            };
+            createCourses(formData, function() {
+                description.value = '';
+                name.value = '';
+                getCourses(renderCourses);
+            });
+        }
     }
 }
 
